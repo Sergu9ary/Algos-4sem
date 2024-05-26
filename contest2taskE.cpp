@@ -7,7 +7,7 @@
 
 const double PI = acos(-1);
 
-size_t next_power_of_two(size_t n) {
+size_t nextPowerOfTwo(size_t n) {
   size_t power = 1;
   while (power < n) {
     power *= 2;
@@ -15,7 +15,7 @@ size_t next_power_of_two(size_t n) {
   return power;
 }
 
-void FFT(std::vector<std::complex<long double>>& values, bool invert) {
+void fft(std::vector<std::complex<long double>>& values, bool invert) {
   size_t n = values.size();
   int lg_n = std::floor(std::log2(n));
 
@@ -58,8 +58,8 @@ void FFT(std::vector<std::complex<long double>>& values, bool invert) {
   }
 }
 
-int Multiply(const std::vector<int>& lhs, const std::vector<int>& rhs, std::vector<int>& result) {
-  size_t n = next_power_of_two(lhs.size() + rhs.size() - 1);
+int multiply(const std::vector<int>& lhs, const std::vector<int>& rhs, std::vector<int>& result) {
+  size_t n = nextPowerOfTwo(lhs.size() + rhs.size() - 1);
 
   std::vector<std::complex<long double>> fur_lhs(lhs.begin(), lhs.end());
   std::vector<std::complex<long double>> fur_rhs(rhs.begin(), rhs.end());
@@ -67,14 +67,14 @@ int Multiply(const std::vector<int>& lhs, const std::vector<int>& rhs, std::vect
   fur_lhs.resize(n);
   fur_rhs.resize(n);
 
-  FFT(fur_lhs, false);
-  FFT(fur_rhs, false);
+  fft(fur_lhs, false);
+  fft(fur_rhs, false);
 
   for (size_t i = 0; i < n; ++i) {
     fur_lhs[i] *= fur_rhs[i];
   }
 
-  FFT(fur_lhs, true);
+  fft(fur_lhs, true);
 
   result.resize(n);
   int max_degree = 0;
@@ -111,7 +111,7 @@ int main() {
 
   std::vector<int> result;
 
-  int max_degree = Multiply(first, second, result);
+  int max_degree = multiply(first, second, result);
 
   std::cout << max_degree << ' ';
   for (int i = max_degree; i >= 0; --i) {
